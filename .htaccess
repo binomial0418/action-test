@@ -1,0 +1,13 @@
+# 一律不快取（保守）
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate"
+  Header set Pragma "no-cache"
+  Header set Expires "0"
+</IfModule>
+
+# 也可只針對 HTML 強制不快取（較常見）
+# <FilesMatch "\.(html?|json)$">
+#   Header set Cache-Control "no-store"
+#   Header set Pragma "no-cache"
+#   Header set Expires "0"
+# </FilesMatch>

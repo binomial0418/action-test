@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>今天想吃什麼？主選單</title>
+<link rel="stylesheet" href="menu.css">
+</head>
+<body>
+  <audio id="bgm" src="back.mp3" preload="auto" loop playsinline></audio>
+  <div id="soundHint">🔊 點一下開啟音樂</div>
+
+  <div id="menuContainer">
+    <div class="inner-wrapper">
+      <h1>今天想吃～</h1>
+      <div class="dish-grid" id="dishGrid"></div>
+    </div>
+  </div>
+
+  <a class="back-home" id="backHome" href="index.html" aria-label="返回首頁">
+    <span>🏠</span><span>返回首頁</span>
+  </a>
+
+<script>
+window.MENU_CONFIG = {
+  backHomeTarget: '鮭魚味噌湯',
+  dishes: [
+    {title:'荷包蛋',         img:'m1.png',   page:'1.html'},
+    {title:'番茄炒蛋',       img:'m2.png',   page:'2.html'},
+    {title:'紅蘿蔔炒花椰菜', img:'m3.png',   page:'3.html'},
+    {title:'洋蔥炒肉',       img:'m4.png',   page:'4.html'},
+    {title:'鮭魚味噌湯',     img:'m5.png',   page:'5.html'},
+    {title:'蒸包子',         img:'m10.png',  page:'10.html'},
+    {title:'皮蛋豆腐',       img:'m6-2.png', page:'6.html'},
+    {title:'煮水餃',         img:'m7.png',   page:'7.html'},
+    {title:'蒸水煮蛋',       img:'m8.png',   page:'8.html'},
+    {title:'蒸饅頭',         img:'m9.png',   page:'9.html'},
+  ]
+};
+</script>
+<script src="menu.js"></script>
+</body>
+</html>

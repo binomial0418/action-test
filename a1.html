@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>今天想完成的事？互動遊戲 - 上廁所</title>
+<link rel="stylesheet" href="game.css">
+</head>
+<body>
+  <div id="gameContainer">
+    <div class="board">
+      <div class="title-wrap">
+        <h1>上廁所</h1>
+        <p class="description">點一下圖就會自動跑到順序格子裡</p>
+      </div>
+      <div class="drop-rows" id="dropZone"></div>
+      <div class="images" id="stepList"></div>
+    </div>
+    <div id="timer" class="timer" hidden>耗用時間：00:00.00</div>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div id="congrats">恭喜完成！</div>
+    <canvas class="confetti-canvas" id="confetti-canvas"></canvas>
+    <audio id="bgm" src="back.mp3" loop preload="auto" playsinline></audio>
+    <audio id="sndError" src="error.wav" preload="auto" playsinline></audio>
+    <audio id="sndSuccess" src="success.wav" preload="auto" playsinline></audio>
+    <div class="intro enter" id="intro">
+      <div class="intro-card">
+        <h2 class="intro-title" id="introTitle"></h2>
+        <ul class="intro-lines" id="introLines"></ul>
+        <button class="start-btn" id="btnStart">開始</button>
+      </div>
+    </div>
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+window.GAME_CONFIG = {
+  recipe:    ["脫褲子","握扶手","坐馬桶","擦乾淨","穿褲子","沖水","洗手"],
+  imageMap:  {"脫褲子":"a1-1.png","握扶手":"a1-2.png","坐馬桶":"a1-3.png","擦乾淨":"a1-4.png","穿褲子":"a1-5.png","沖水":"a1-6.png","洗手":"a1-7.png"},
+  menuUrl:   'act.html',
+  menuLabel: '重選活動'
+};
+</script>
+<script src="game.js"></script>
+</body>
+</html>

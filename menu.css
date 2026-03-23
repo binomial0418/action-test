@@ -1,0 +1,104 @@
+/* ============================================================
+   menu.css — cook.html / act.html 共用樣式
+   ============================================================ */
+:root {
+  --card-size-desktop: 150px;
+  --card-gap-desktop: 30px;
+  --title-color: #5c2e00;
+  --text-color:  #3d1f00;
+}
+* { box-sizing: border-box; }
+
+body {
+  margin: 0; padding: 0;
+  background: url('bg.png') no-repeat center center / cover fixed;
+  font-family: sans-serif;
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+/* ── 主容器 ── */
+#menuContainer {
+  width: 100%; max-width: 1000px;
+  margin: 0 auto; padding-top: 40px;
+  text-align: center; transition: opacity .5s ease;
+  position: relative; z-index: 1;
+}
+#menuContainer.fade-out { opacity: 0; }
+
+h1 { font-size: 48px; color: var(--title-color); margin: 0 0 30px; }
+
+/* ── 卡片格 ── */
+.dish-grid {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: var(--card-gap-desktop); padding-bottom: 60px; position: relative;
+}
+.dish-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; text-decoration: none; color: var(--text-color);
+  font-weight: bold; background: none; border: none; padding: 0;
+  transition: transform .15s; position: relative;
+}
+.dish-card:focus-visible { outline: 3px solid #ffcc00; outline-offset: 4px; }
+.dish-card:hover { transform: scale(1.05); }
+.dish-card img {
+  width: var(--card-size-desktop); height: var(--card-size-desktop);
+  border-radius: 16px; object-fit: cover;
+  box-shadow: 2px 2px 8px rgba(0,0,0,.25);
+  border: 4px solid rgba(255,255,255,.8); background: #fff;
+}
+.dish-card span { font-size: 20px; line-height: 1.1; white-space: nowrap; }
+
+/* ── 音樂提示條 ── */
+#soundHint {
+  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+  background: rgba(0,0,0,.65); color: #fff;
+  padding: 8px 14px; border-radius: 999px; font-size: 14px; line-height: 1;
+  display: none; z-index: 9999; user-select: none;
+}
+
+/* ── 玻璃擬態內框 ── */
+.inner-wrapper {
+  background: rgba(255, 250, 235, .04);
+  -webkit-backdrop-filter: blur(2px) saturate(120%);
+  backdrop-filter: blur(2px) saturate(120%);
+  padding: 40px 30px 60px; border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 30px 80px -10px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.35);
+  margin: 0 auto; max-width: 1020px;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .inner-wrapper { background: rgba(255,255,255,.9); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+/* ── 返回首頁按鈕 ── */
+.back-home {
+  position: absolute;
+  background: #fff; border: 3px solid #5c2e00; border-radius: 999px;
+  padding: 10px 18px; font-weight: 700; color: #5c2e00; cursor: pointer;
+  box-shadow: 2px 4px 14px rgba(0,0,0,.2); text-decoration: none;
+  display: flex; align-items: center; gap: 8px; font-size: 16px;
+  z-index: 10; transition: transform .15s; white-space: nowrap;
+}
+.back-home:hover { transform: scale(1.05); }
+
+/* ── 手機版 ── */
+@media (max-width: 600px) {
+  body { overflow: hidden; }
+  #menuContainer {
+    max-width: none; width: 100%; height: calc(var(--vh,1vh)*100);
+    padding-top: 2vh; padding-left: 2vw; padding-right: 2vw;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-start; gap: 1.5vh;
+  }
+  h1 { font-size: 7vh; margin: 0; line-height: 1; }
+  .dish-grid {
+    width: 100%; margin-top: 1vh; margin-bottom: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(40vw, 160px), 1fr));
+    gap: 2vh 3vw; padding-bottom: env(safe-area-inset-bottom, 8px);
+  }
+  .dish-card { gap: .6vh; }
+  .dish-card img { width: 100%; aspect-ratio: 1; border-width: 4px; border-radius: 14px; box-shadow: 2px 2px 6px rgba(0,0,0,.25); }
+  .dish-card span { font-size: 3.2vh; white-space: nowrap; }
+}

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>今天來點什麼～</title>
+<style>
+  :root{
+    --wrap-w: 1180px;
+    --radius: 28px;
+    --gap: 38px;
+
+    --title-size: clamp(56px, 7.2vw, 96px);
+    --card-font: clamp(28px, 3.3vw, 44px);
+
+    --accent-a: #8b4a00;
+    --accent-b: #b03a00;
+
+    /* 玻璃內框可調參數 */
+    --glass-alpha: 0.05;   /* 透明度：0(透明)~1(不透明) */
+    --glass-blur: 2px;    /* 背景模糊強度 */
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    font-family: system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
+    color:#3b220c;
+    /* 背景改為 bg.png 全螢幕鋪滿 */
+    background: url('bg.png') center/cover no-repeat fixed;
+  }
+
+  .wrap{
+    width:min(95%, var(--wrap-w));
+    margin:48px auto;
+    padding:36px 44px 44px;
+    border-radius: var(--radius);
+
+    /* ✅ 玻璃效果：半透明 + 背景模糊 + 內側細邊框 */
+    background: rgba(255,255,255, var(--glass-alpha));
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow:
+      0 30px 80px -10px rgba(0,0,0,.18),
+      0 0 0 1px rgba(255,255,255,.35) inset;
+
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* 若不需要左側淡色漸層，可刪除這段 ::before */
+  .wrap::before{
+    content:"";
+    position:absolute; inset:0 50% 0 0;
+    background: linear-gradient(90deg, rgba(255,238,210,.35), rgba(255,238,210,0));
+    pointer-events:none;
+  }
+
+  h1{
+    margin:0 0 24px;
+    line-height:1;
+    font-size: var(--title-size);
+    letter-spacing: 4px;
+    color:#5c2e00;
+    text-shadow:
+      0 4px 0 rgba(0,0,0,.06),
+      0 18px 40px rgba(0,0,0,.18);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap);
+    align-items: stretch;
+  }
+
+  .card{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:48px 28px;
+    border-radius: 24px;
+    text-decoration:none;
+    background:#fff;
+    color:#3b220c;
+    box-shadow: 0 10px 22px rgba(0,0,0,.12);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    border:5px solid transparent;
+    position: relative;
+  }
+  .card:focus-visible{ outline: 4px solid #ffcc66; outline-offset: 4px; }
+
+  .card.left  { border-color: var(--accent-a); }
+  .card.right { border-color: var(--accent-b); }
+
+  .card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 18px 34px rgba(0,0,0,.16);
+  }
+
+  .label{
+    font-weight: 800;
+    font-size: var(--card-font);
+    letter-spacing: 3px;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+  .label small{
+    display:block;
+    font-size: 0.68em;
+    font-weight: 700;
+    margin-top: .25em;
+    letter-spacing: 2px;
+    opacity:.95;
+  }
+
+  @media (max-width: 700px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  /* optional: subtle pulsing hint on load for cards */
+  .card.pulse{
+    animation: pulse 2.5s ease-out 1;
+  }
+  @keyframes pulse{
+    0%{ box-shadow: 0 10px 22px rgba(0,0,0,.12); }
+    50%{ box-shadow: 0 22px 40px rgba(0,0,0,.22); }
+    100%{ box-shadow: 0 10px 22px rgba(0,0,0,.12); }
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>今天來點什麼～</h1>
+
+    <section class="grid" aria-label="模式選擇">
+      <a class="card left pulse" href="act.html" aria-label="挑戰日常活動">
+        <div class="label">挑戰<small>日常活動</small></div>
+      </a>
+      <a class="card right pulse" href="cook.html" aria-label="挑戰作菜活動">
+        <div class="label">挑戰<small>作菜活動</small></div>
+      </a>
+    </section>
+  </main>
+
+  <audio id="bgm" src="back.mp3" loop preload="auto" playsinline></audio>
+
+  <script>
+    const bgm = document.getElementById('bgm');
+    function tryPlay(){
+      if(!bgm) return;
+      bgm.volume = 0.55;
+      const p = bgm.play();
+      if (p && typeof p.then === 'function') {
+        p.catch(()=>{
+          const resume = () => {
+            bgm.play().catch(()=>{});
+            document.removeEventListener('click', resume, true);
+            document.removeEventListener('touchend', resume, true);
+          };
+          document.addEventListener('click', resume, true);
+          document.addEventListener('touchend', resume, true);
+        });
+      }
+    }
+    // 嘗試自動播放
+    window.addEventListener('load', tryPlay);
+    // 交互後確保播
+    ['click','keydown','touchend'].forEach(e=>document.addEventListener(e, tryPlay, {once:true, capture:true}));
+  </script>
+</body>
+</html>
