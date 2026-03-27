@@ -5,19 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>今天想吃什麼？主選單</title>
 <link rel="stylesheet" href="menu.css">
+<script src="libs/tailwind.min.js"></script>
 </head>
 <body>
   <audio id="bgm" src="back.mp3" preload="auto" loop playsinline></audio>
-  <div id="soundHint">🔊 點一下開啟音樂</div>
+  <div id="soundHint" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/65 text-white px-3.5 py-2 rounded-full text-sm leading-none hidden z-[9999] select-none">🔊 點一下開啟音樂</div>
 
-  <div id="menuContainer">
-    <div class="inner-wrapper">
-      <h1>今天想吃～</h1>
-      <div class="dish-grid" id="dishGrid"></div>
+  <div id="menuContainer" class="w-full max-w-[1000px] mx-auto pt-10 text-center transition-opacity duration-500 relative z-[1]">
+    <div class="inner-wrapper bg-[rgba(255,250,235,0.04)] border border-white/20 shadow-[0_30px_80px_-10px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.35)] rounded-3xl px-8 py-10 max-w-[1020px] mx-auto">
+      <h1 class="text-5xl font-bold text-[#5c2e00] mb-8">今天想吃～</h1>
+      <div class="dish-grid flex flex-wrap justify-center gap-8 pb-16 relative" id="dishGrid"></div>
     </div>
   </div>
 
-  <a class="back-home" id="backHome" href="index.html" aria-label="返回首頁">
+  <a class="back-home fixed bg-white border-[3px] border-[#5c2e00] rounded-full px-4 py-2.5 font-bold text-[#5c2e00] cursor-pointer shadow-[2px_4px_14px_rgba(0,0,0,0.2)] no-underline flex items-center gap-2 text-base z-10 transition-transform hover:scale-105 whitespace-nowrap" id="backHome" href="index.html" aria-label="返回首頁">
     <span>🏠</span><span>返回首頁</span>
   </a>
 

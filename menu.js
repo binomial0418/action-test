@@ -40,9 +40,9 @@
     grid.innerHTML = '';
     cfg.dishes.forEach(d => {
       const btn = document.createElement('button');
-      btn.className = 'dish-card';
+      btn.className = 'dish-card flex flex-col items-center gap-2 cursor-pointer no-underline text-[#3d1f00] font-bold bg-transparent border-none p-0 transition-transform hover:scale-105 relative';
       btn.setAttribute('type', 'button');
-      btn.innerHTML = `<img src="${d.img}" alt="${d.title}"><span>${d.title}</span>`;
+      btn.innerHTML = `<img src="${d.img}" alt="${d.title}" class="w-[150px] h-[150px] rounded-2xl object-cover shadow-[2px_2px_8px_rgba(0,0,0,0.25)] border-4 border-white/80 bg-white"><span class="text-xl leading-tight whitespace-nowrap">${d.title}</span>`;
       btn.addEventListener('click', () => goPage(d.page));
       grid.appendChild(btn);
     });

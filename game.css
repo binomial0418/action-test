@@ -1,30 +1,12 @@
 /* ============================================================
-   game.css — 所有遊戲頁面的共用樣式
-   個別頁面只需在 <style> 中覆寫需要調整的 CSS 變數即可
+   game.css — 僅保留 Tailwind 無法直接處理的部分
+   ── CSS 自訂屬性、pseudo-elements、keyframes、背景
    ============================================================ */
+
+/* ── CSS 變數預設值 ── */
 :root {
-  /* 版面尺寸 */
   --slot: 165px;
-  --title-size: 108px;
-  --desc-size: 27px;
-  --label-size: 24px;
   --index-size: 51px;
-  --btn-font: 30px;
-  --btn-pad-v: 18px;
-  --btn-pad-h: 15px;
-  --gap-lg: 33px;
-  --gap-md: 21px;
-  --gap-sm: 18px;
-
-  /* 側欄 */
-  --sidebar-right: 10px;
-  --sidebar-width: 200px;
-
-  /* 計時器位置（相對 #gameContainer） */
-  --timer-x: 610px;
-  --timer-y: 60px;
-
-  /* 配色主題（預設藍色；個別頁面可覆寫） */
   --accent: #66a3ff;
   --accent-dark: #b30000;
   --title-color: #b94700;
@@ -32,86 +14,139 @@
   --congr1: #ff0000;
   --congr2: #ffeb3b;
   --congr3: #00e5ff;
+  --timer-x: 610px;
+  --timer-y: 60px;
+  --sidebar-right: 10px;
+  --sidebar-width: 200px;
 }
 
-* { box-sizing: border-box; }
-
+/* ── 背景 & 基本字型 ── */
 body {
-  margin: 0; padding: 0; color: #333;
   background: url('bg.png') no-repeat center center / cover;
   font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
-  min-height: 100vh; position: relative;
 }
 
+/* ── 遊戲容器（確保 absolute 子元素定位正確，不依賴 Tailwind 注入時序） ── */
 #gameContainer {
-  width: 95%; max-width: 1400px; margin: 42px auto; padding: 33px;
-  position: relative; transition: opacity .5s;
+  position: relative;
+  transition: opacity .5s;
 }
 .fade-out { opacity: 0; }
 
-/* ── 遊戲板 ── */
-.board { display: flex; flex-direction: column; gap: var(--gap-md); }
-.title-wrap { display: flex; align-items: flex-end; gap: 40px; }
-.title-wrap h1 { margin: 0; line-height: 1; color: var(--title-color); font-size: var(--title-size); }
-.title-wrap .description { margin: 0; color: var(--desc-color); line-height: 1.25; font-size: var(--desc-size); }
-
-/* ── 拖放格 ── */
-.drop-rows { display: flex; flex-direction: column; gap: var(--gap-sm); align-items: flex-start; margin-top: 6px; }
-.drop-row  { display: flex; gap: var(--gap-sm); justify-content: flex-start; }
-
-.drop-slot {
-  width: var(--slot); aspect-ratio: 1; position: relative;
-  border: 5px solid var(--accent); border-radius: 21px; background: #fff; overflow: hidden;
+/* ── 標題與描述（用 #gameContainer 提高優先權，覆蓋 Tailwind preflight 的 h1 重置） ── */
+#gameContainer h1 {
+  margin: 0; line-height: 1;
+  color: var(--title-color);
+  font-size: var(--title-size, 108px);
 }
-.drop-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
+#gameContainer .description {
+  margin: 0; line-height: 1.25;
+  color: var(--desc-color);
+  font-size: var(--desc-size, 27px);
+}
+
+/* ── 拖放列（JS 動態建立） ── */
+.drop-row { display: flex; gap: 18px; justify-content: flex-start; }
+
+/* ── 拖放格：尺寸與邊框 ── */
+.drop-slot {
+  width: var(--slot);
+  aspect-ratio: 1;
+  position: relative;
+  border: 5px solid var(--accent);
+  border-radius: 21px;
+  background: #fff;
+  overflow: hidden;
+}
+.drop-slot img {
+  width: 100%; height: 100%;
+  object-fit: cover; border-radius: 16px;
+}
+
+/* 序號 pseudo-element（Tailwind 無法做 content: attr(...)） */
 .drop-slot::before {
-  content: attr(data-idx); position: absolute; inset: 0;
+  content: attr(data-idx);
+  position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-size: var(--index-size); color: #8a8a8a; opacity: .7;
 }
 .drop-slot[data-filled="1"]::before { display: none; }
 .drop-slot.wrong { background: #ffadad !important; }
 .drop-slot.wrong::after {
-  content: "✕"; position: absolute; inset: 0;
+  content: "✕";
+  position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   color: #d50000; font-size: 96px; font-weight: 900;
-  text-shadow: 0 0 8px rgba(0,0,0,.25); animation: pop .35s ease-out;
+  text-shadow: 0 0 8px rgba(0,0,0,.25);
+  animation: pop .35s ease-out;
 }
 @keyframes pop {
-  0%   { transform: scale(.6);  opacity: .2; }
+  0%   { transform: scale(.6);   opacity: .2; }
   70%  { transform: scale(1.15); opacity: 1;  }
-  100% { transform: scale(1);   opacity: 1;  }
+  100% { transform: scale(1);    opacity: 1;  }
 }
 
 /* ── 步驟圖卡 ── */
-.images { display: flex; flex-wrap: nowrap; gap: var(--gap-sm); justify-content: center; margin-top: 6px; }
-.step-img { width: var(--slot); display: flex; flex-direction: column; align-items: center; gap: 9px; cursor: pointer; }
-.step-img img { width: 100%; aspect-ratio: 1; border: 4px solid var(--accent); border-radius: 21px; background: #fff; }
-.step-img div { font-size: var(--label-size); white-space: nowrap; }
+.step-img {
+  width: var(--slot);
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  cursor: pointer;
+}
+.step-img img {
+  width: 100%; aspect-ratio: 1;
+  border: 4px solid var(--accent);
+  border-radius: 21px; background: #fff;
+}
+.step-img div { font-size: 24px; white-space: nowrap; }
 
-/* ── 側欄與按鈕 ── */
+/* ── 側欄 ── */
 .sidebar {
-  position: absolute; top: var(--sidebar-top, 140px); right: var(--sidebar-right);
+  position: absolute;
+  top: var(--sidebar-top, 140px);
+  right: var(--sidebar-right);
   width: var(--sidebar-width);
-  display: flex; flex-direction: column; gap: var(--gap-sm); z-index: 3; align-items: stretch;
+  display: flex; flex-direction: column; gap: 18px;
+  z-index: 3; align-items: stretch;
 }
 .btn {
   display: flex; align-items: center; justify-content: center; gap: 15px;
-  background: #fff; color: var(--accent-dark); border: 5px solid var(--accent-dark);
-  border-radius: 21px; font-weight: 700; font-size: var(--btn-font);
-  padding: var(--btn-pad-v) var(--btn-pad-h); cursor: pointer;
-  box-shadow: 3px 3px 12px rgba(0,0,0,.25); transition: transform .15s;
-  width: 100%; min-height: 54px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: #fff; color: var(--accent-dark);
+  border: 5px solid var(--accent-dark);
+  border-radius: 21px; font-weight: 700; font-size: 30px;
+  padding: 18px 15px; cursor: pointer;
+  box-shadow: 3px 3px 12px rgba(0,0,0,.25);
+  transition: transform .15s;
+  width: 100%; min-height: 54px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .btn:hover { transform: scale(1.05); }
-.btn img { width: 33px; height: 33px; flex: 0 0 33px; }
+.btn svg { width: 33px; height: 33px; flex: 0 0 33px; }
+
+/* ── 計時器 ── */
+.timer {
+  position: absolute;
+  left: var(--timer-x);
+  top: var(--timer-y);
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,.78);
+  color: #7a0000;
+  padding: 16px 22px;
+  border-radius: 16px;
+  font: 900 40px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .8px;
+  box-shadow: 0 5px 16px rgba(0,0,0,.14);
+  z-index: 20;
+}
 
 /* ── 恭喜動畫 ── */
 #congrats {
-  position: absolute; left: 50%; top: 62%; transform: translate(-50%,-50%) scale(.8);
-  font-size: 108px; white-space: nowrap; opacity: 0; pointer-events: none; z-index: 5;
+  position: absolute; left: 50%; top: 62%;
+  transform: translate(-50%,-50%) scale(.8);
+  font-size: 108px; white-space: nowrap;
+  opacity: 0; pointer-events: none; z-index: 5;
   background: linear-gradient(45deg, var(--congr1), var(--congr2), var(--congr3));
-  -webkit-background-clip: text; color: transparent; text-shadow: 3px 3px 12px rgba(0,0,0,.4);
+  -webkit-background-clip: text; color: transparent;
+  text-shadow: 3px 3px 12px rgba(0,0,0,.4);
 }
 @keyframes showCongrats {
   0%   { opacity: 0; transform: translate(-50%,-50%) scale(.7);  }
@@ -120,7 +155,9 @@ body {
   100% { opacity: 0; transform: translate(-50%,-50%) scale(1);   }
 }
 canvas.confetti-canvas {
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999;
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 9999;
 }
 
 /* ── 前導畫面 ── */
@@ -134,46 +171,18 @@ canvas.confetti-canvas {
 @keyframes introIn  { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
 @keyframes introOut { to   { opacity: 0; transform: scale(.98); } }
 
-.intro-card {
-  width: min(1100px, 92%); padding: 44px 48px;
-  background: rgba(255,245,220,.98); border-radius: 28px;
-  box-shadow: 0 10px 28px rgba(0,0,0,.25), inset 0 0 0 8px rgba(255,255,255,.85);
-  text-align: center;
-}
 .intro-title {
-  margin: 0 0 22px; font-size: 112px; line-height: 1; color: #c85a00;
-  text-shadow: 0 4px 0 #00000022, 0 10px 18px rgba(0,0,0,.18);
   font-family: "Noto Serif TC", "DFKai-SB", "STKaiti", "Hiragino Mincho ProN", serif;
   letter-spacing: 2px;
+  text-shadow: 0 4px 0 #00000022, 0 10px 18px rgba(0,0,0,.18);
 }
 .intro-lines {
-  margin: 0; padding: 0; list-style: none;
   font-family: "Noto Serif TC", "DFKai-SB", "STKaiti", serif;
-  color: #c62828; font-weight: 800; line-height: 1.25;
-  text-shadow: 0 2px 0 #00000012, 0 6px 14px rgba(0,0,0,.18); font-size: 64px;
-}
-.intro-lines li + li { margin-top: 14px; }
-.start-btn {
-  margin-top: 28px; font-size: 36px; font-weight: 900; letter-spacing: 4px;
-  padding: 16px 36px; border-radius: 18px; border: 6px solid var(--accent-dark);
-  background: #fff; color: var(--accent-dark); cursor: pointer;
-  box-shadow: 3px 3px 12px rgba(0,0,0,.25);
-}
-
-/* ── 計時器 ── */
-.timer {
-  position: absolute; left: var(--timer-x); top: var(--timer-y);
-  transform: translate(-50%, -50%);
-  background: rgba(255,255,255,.78); color: #7a0000;
-  padding: 16px 22px; border-radius: 16px;
-  font: 900 40px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: .8px; box-shadow: 0 5px 16px rgba(0,0,0,.14); z-index: 20;
+  text-shadow: 0 2px 0 #00000012, 0 6px 14px rgba(0,0,0,.18);
 }
 
 /* ── iPad / 窄螢幕 ── */
 @media (max-width: 1024px) {
-  :root {
-    --btn-font: 22px; --btn-pad-v: 10px; --btn-pad-h: 14px;
-    --sidebar-right: 0px; --sidebar-width: 180px;
-  }
+  .btn { font-size: 22px; padding: 10px 14px; }
+  :root { --sidebar-right: 0px; --sidebar-width: 180px; }
 }

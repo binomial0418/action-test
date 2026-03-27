@@ -66,10 +66,13 @@
   function buildSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
+    const svgRestart = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`;
+    const svgMenu    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`;
+    const svgHome    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>`;
     sidebar.innerHTML = `
-      <button class="btn" onclick="restartTransition()"><img src="https://cdn-icons-png.flaticon.com/512/860/860790.png" alt=""> 重來</button>
-      <button class="btn" onclick="toMenu()"><img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt=""> ${cfg.menuLabel}</button>
-      <button class="btn" onclick="toHome()"><img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt=""> 回首頁</button>
+      <button class="btn" onclick="restartTransition()">${svgRestart} 重來</button>
+      <button class="btn" onclick="toMenu()">${svgMenu} ${cfg.menuLabel}</button>
+      <button class="btn" onclick="toHome()">${svgHome} 回首頁</button>
     `;
   }
 
