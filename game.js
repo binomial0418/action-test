@@ -243,6 +243,9 @@
           { duration: 220, easing: 'ease-out' }
         );
 
+        // 裝置震動回饋
+        if (navigator.vibrate) navigator.vibrate([40, 30, 60]);
+
         const done = slots.every((s, i) => s.dataset.step === recipe[i]);
         if (done) { stopTimer(); showCongrats(); }
         else      { playSnd(sndSuccess); }
